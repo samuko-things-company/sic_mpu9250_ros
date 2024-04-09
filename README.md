@@ -12,7 +12,7 @@ This is a child project of the **`smc_mpu9250`** project. This is to be used wit
   > sudo apt install libserial-dev
 
 - In the src/ folder of your ros workspace, clone the repo (or you can download and add it manually to the src/ folder)
-  > ```git clone https://github.com/samuko-things-company/sic_mpu9250_ros2.git```
+  > ```git clone https://github.com/samuko-things-company/sic_mpu9250_ros.git```
 
 - ensure it is the madgwick code that is running in the driver module (i.e you should see the green LED turn on). if not, upload it.
 
