@@ -114,7 +114,7 @@ public:
     val[3] = 0.0;
   }
 
-  void getRPYVariance(float &r, float &p, float &y){
+  void getRPYvariance(float &r, float &p, float &y){
     get("rpy-var");
 
     r = val[0];
@@ -146,6 +146,17 @@ public:
     ax = val[0];
     ay = val[1];
     az = val[2];
+
+    val[0] = 0.0;
+    val[1] = 0.0;
+    val[2] = 0.0;
+    val[3] = 0.0;
+  }
+
+  void getGain(float &gain){
+    get("gain");
+
+    gain = val[0];
 
     val[0] = 0.0;
     val[1] = 0.0;

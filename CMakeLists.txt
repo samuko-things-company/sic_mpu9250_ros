@@ -9,6 +9,9 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 
 add_executable(sic_mpu9250 src/sic_mpu9250.cpp)
@@ -16,7 +19,12 @@ target_include_directories(sic_mpu9250 PUBLIC
 $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
 $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
 )
-ament_target_dependencies(sic_mpu9250 rclcpp sensor_msgs)
+ament_target_dependencies(sic_mpu9250
+  rclcpp
+  geometry_msgs
+  sensor_msgs
+  tf2
+  tf2_ros)
 target_link_libraries(sic_mpu9250 serial)
 
 install(

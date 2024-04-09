@@ -2,9 +2,10 @@
 #include "sensor_msgs/msg/imu.hpp"
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "geometry_msgs/msg/vector3_stamped.hpp"
-#include <tf2/LinearMath/Matrix3x3.h>
-#include <tf2/LinearMath/Quaternion.h>
-#include "sic_mpu9250_ros2/sic_mpu9250_cppserial_lib.hpp"
+#include "tf2_ros/transform_broadcaster.h"
+#include "tf2/LinearMath/Matrix3x3.h"
+#include "tf2/LinearMath/Quaternion.h"
+#include "sic_mpu9250_ros/sic_mpu9250_cppserial_lib.hpp"
 
 
 
@@ -34,8 +35,8 @@ public:
       publish_frequency = this->get_parameter("publish_frequency").as_double();
       RCLCPP_INFO(this->get_logger(), "publish_frequency: %f", publish_frequency);
 
-      publish_tf_on_map_frame = this->get_parameter("publish_frequency").as_bool();
-      RCLCPP_INFO(this->get_logger(), "publish_tf_on_map_frame: %f", publish_tf_on_map_frame);
+      publish_tf_on_map_frame = this->get_parameter("publish_tf_on_map_frame").as_bool();
+      RCLCPP_INFO(this->get_logger(), "publish_tf_on_map_frame: %d", publish_tf_on_map_frame);
       /*---------------------------------------------------------------------*/
 
 
@@ -46,13 +47,15 @@ public:
         delay_ms(1000);
         RCLCPP_INFO(this->get_logger(), "%d", i);
       }
+
+      sic_mpu9250.getGain(filterGain);
       /*---------------------------------------------------------------------*/
 
 
       /*----------initialize IMU message---------------*/
       messageImu.header.frame_id = frame_id;
       
-      sic_mpu9250.getRPYVariance(data_x, data_y, data_z);
+      sic_mpu9250.getRPYvariance(data_x, data_y, data_z);
       messageImu.orientation_covariance = { data_x, 0.0, 0.0, 0.0, data_y, 0.0, 0.0, 0.0, data_z };
 
       sic_mpu9250.getRPYrateVariance(data_x, data_y, data_z);
@@ -67,12 +70,18 @@ public:
       imu_data_publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("/imu/data", 10);
       imu_rpy_publisher_ = this->create_publisher<geometry_msgs::msg::Vector3Stamped>("/imu/data_rpy", 10);
 
+      // Initialize the transform broadcaster
+      tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
+
       timer_ = this->create_wall_timer(
         std::chrono::microseconds((long)(1000000/publish_frequency)),
         std::bind(&SicMPU9250Node::publish_imu_callback, this));
       /*---------------------------------------------------------------------*/
 
-      RCLCPP_INFO(this->get_logger(), "sic_mpu9250 node has started");
+      RCLCPP_INFO(this->get_logger(), "sic_mpu9250 node has started with filterGain: %f", filterGain);
+      if (publish_tf_on_map_frame){
+        RCLCPP_INFO(this->get_logger(), "imu transform is being published on map-frame for test rviz viewing");
+      }
     }
 
 private:
@@ -104,31 +113,31 @@ private:
     )).getRPY(rpy.vector.x, rpy.vector.y, rpy.vector.z);
     rpy.header = messageImu.header;
 
+    if (publish_tf_on_map_frame) {
+      publish_imu_tf(messageImu);
+    }
+
     imu_data_publisher_->publish(messageImu);
     imu_rpy_publisher_->publish(rpy);
-
-    if (publish_imu_tf_on_map_frame) {
-      publish_imu_tf_on_map_frame(messageImu);
-    }
   }
 
-  void publish_imu_tf_on_map_frame(sensor_msgs::msg::Imu messageImu){  
-    geometry_msgs::msg::TransformStamped transform;
-    transform.header.stamp = messageImu.header.stamp;
+  void publish_imu_tf(sensor_msgs::msg::Imu messageImu){  
+    geometry_msgs::msg::TransformStamped t;
+    t.header.stamp = messageImu.header.stamp;
 
-    transform.header.frame_id = "map";
-    transform.child_frame_id = messageImu.header.frame_id;
+    t.header.frame_id = "map";
+    t.child_frame_id = messageImu.header.frame_id;
 
-    transform.transform.rotation.w = messageImu.orientation.w;
-    transform.transform.rotation.x = messageImu.orientation.x;
-    transform.transform.rotation.y = messageImu.orientation.y;
-    transform.transform.rotation.z = messageImu.orientation.z;
+    t.transform.rotation.w = messageImu.orientation.w;
+    t.transform.rotation.x = messageImu.orientation.x;
+    t.transform.rotation.y = messageImu.orientation.y;
+    t.transform.rotation.z = messageImu.orientation.z;
 
-    transform.transform.translation.x = 0.0;
-    transform.transform.translation.y = 0.0;
-    transform.transform.translation.z = 0.0;
+    t.transform.translation.x = 0.0;
+    t.transform.translation.y = 0.0;
+    t.transform.translation.z = 0.0;
 
-    tf_broadcaster_.sendTransform(transform);
+    tf_broadcaster_->sendTransform(t);
   }
 
   rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_data_publisher_;
@@ -136,6 +145,7 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
 
   sensor_msgs::msg::Imu messageImu = sensor_msgs::msg::Imu();
+  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
   std::string frame_id;
   std::string port;
@@ -144,6 +154,7 @@ private:
 
   SIC sic_mpu9250;
   float data_w, data_x, data_y, data_z;
+  float filterGain;
 };
 
 int main(int argc, char **argv)

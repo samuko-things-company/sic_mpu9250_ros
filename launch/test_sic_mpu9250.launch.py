@@ -9,11 +9,11 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     # Process the URDF file
-    pkg_path = os.path.join(get_package_share_directory('sic_mpu9250_ros2'))
+    pkg_path = os.path.join(get_package_share_directory('sic_mpu9250_ros'))
     sic_mpu9250_config_file = os.path.join(pkg_path,'config','sic_mpu9250_test_params.yaml')
 
     sic_mpu9250_node = Node(
-        package='sic_mpu9250_ros2',
+        package='sic_mpu9250_ros',
         executable='sic_mpu9250',
         name='sic_mpu9250',
         output='screen',
