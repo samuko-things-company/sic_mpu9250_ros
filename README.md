@@ -4,36 +4,40 @@
 - ensure you've already set up your microcomputer or PC system with `ros-humble` with `colcon` and your `ros workspace` also setup
 
 - install the `libserial-dev` package on your linux machine
-  > ```sudo apt-get update```
-  >
-  > ```sudo apt install libserial-dev```
+  ```shell
+  $ sudo apt-get update
+  $ sudo apt install libserial-dev
+  ```
 
 - install `rosdep` so you can install necessary ros related dependencies for the package.
-  > ```sudo apt-get update```
-  >
-  > ```sudo apt install python3-rosdep2```
-  >
-  > ```rosdep update```
+  ```shell
+  $ sudo apt-get update
+  $ sudo apt install python3-rosdep2
+  $ rosdep update
+  ```
 
 - In the src/ folder of your ros workspace, clone the repo (or you can download and add it manually to the src/ folder)
-  > ```git clone -b humble https://github.com/samuko-things-company/sic_mpu9250_ros.git```
+  ```shell
+  $ git clone -b humble https://github.com/samuko-things-company/sic_mpu9250_ros.git
+  ```
 
 - cd into the package folder (i.e `sic_mpu9250_ros`) and run rosdep to install any necessary ros dependencies
-  > ```cd sic_mpu9250_ros```
-  >
-  > ```rosdep install --from-paths src --ignore-src -r -y```
+  ```shell
+  $ cd sic_mpu9250_ros
+  $ rosdep install --from-paths src --ignore-src -r -y
+  ```
 
 - ensure it is the madgwick code that is running in the driver module (i.e you should see the green LED turn on). if not, upload it.
 
 - connect the already calibrated MPU9250 interfaced with the sic_mpu9250_driver module to the Computer (PC or microcomputer) and check it serial port:
   > The best way to select the right serial port (if you are using multiple serial device) is to select by path
   >
-  > ```ls /dev/serial/by-path```
+  > `ls /dev/serial/by-path`
   >
   > you should see a value (if the driver is connected and seen by the computer), your serial port would be -> /dev/serial/by-path/[value]. for more info visit this tutorial from [ArticulatedRobotics](https://www.youtube.com/watch?v=eJZXRncGaGM&list=PLunhqkrRNRhYAffV8JDiFOatQXuU-NnxT&index=8)
 
   - OR you can also try this:
-  > ```ls /dev/ttyU*```
+  > `ls /dev/ttyU*`
   >
   > you should see /dev/ttyUSB0 or /dev/ttyUSB1 and so on
   
@@ -41,12 +45,22 @@
 - you may not need to change the frame name and the publish_frequency.
 
 - build the packages with colcon (in your ros workspace root folder):
-  > ```colcon build --packages-select sic_mpu9250_ros --symlink-install``` or ```colcon build --packages-select sic_mpu9250_ros```
+  ```shell
+  $ colcon build --packages-select sic_mpu9250_ros --symlink-install
+  ```
 
 - to vizualize in rviz, run:
-  > ```ros2 launch sic_mpu9250_ros test_sic_mpu9250.launch.py``` in a terminal and ```rviz2``` in another terminal.
+  ```shell
+  $ ros2 launch sic_mpu9250_ros test_sic_mpu9250.launch.py
+  ``` 
+  in another terminal run: 
+  ```shell
+  $ rviz2
+  ```
   > add TF and move the IMU about to see the transform from the imu frame to the map frame for test.
 
 - to use in your project (e.g with a URDF file), run:
-  > ```ros2 launch sic_mpu9250_ros start_sic_mpu9250.launch.py```.
+  ```shell
+  $ ros2 launch sic_mpu9250_ros start_sic_mpu9250.launch.py
+  ```
   > the imu frame with the imu_data topic should now be available.
