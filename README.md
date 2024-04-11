@@ -1,18 +1,27 @@
-# smc_mpu9250_ros
-This is a child project of the **`smc_mpu9250`** project. This is to be used with **Ubuntu 22.04 (ros2 humble)** in your linux-based microcomputer **ROS2** mobile robotic project (as it depends on the libserial-dev linux package) to communicate with the **`sic_mpu9250_driver module`** after successful calibration setup with the [**`sic_mpu9250_setup_py_codes`**](https://github.com/samuko-things-company/sic_mpu9250_setup_py_codes).
-> **NOTE:** should be used with your ros2 project running on linux Ubuntu 22.04 [ROS2 Humble] (e.g Raspberry Pi, PC, etc.)
-
+> **NOTE:** should be used with your ros2 project running on linux `Ubuntu 22.04` [`ros-humble`] (e.g Raspberry Pi, PC, etc.)
 
 ## How to Use the Package
-- ensure you've already set up your microcomputer or PC system with ros2-humble with colcon and your ros workspace also setup
+- ensure you've already set up your microcomputer or PC system with `ros-humble` with `colcon` and your `ros workspace` also setup
 
-- install the libserial-dev package on your linux machine
-  > sudo apt-get update
+- install the `libserial-dev` package on your linux machine
+  > ```sudo apt-get update```
   >
-  > sudo apt install libserial-dev
+  > ```sudo apt install libserial-dev```
+
+- install `rosdep` so you can install necessary ros related dependencies for the package.
+  > ```sudo apt-get update```
+  >
+  > ```sudo apt install python3-rosdep2```
+  >
+  > ```rosdep update```
 
 - In the src/ folder of your ros workspace, clone the repo (or you can download and add it manually to the src/ folder)
-  > ```git clone https://github.com/samuko-things-company/sic_mpu9250_ros.git```
+  > ```git clone -b humble https://github.com/samuko-things-company/sic_mpu9250_ros.git```
+
+- cd into the package folder (i.e `sic_mpu9250_ros`) and run rosdep to install any necessary ros dependencies
+  > ```cd sic_mpu9250_ros```
+  >
+  > ```rosdep install --from-paths src --ignore-src -r -y```
 
 - ensure it is the madgwick code that is running in the driver module (i.e you should see the green LED turn on). if not, upload it.
 
@@ -32,7 +41,7 @@ This is a child project of the **`smc_mpu9250`** project. This is to be used wit
 - you may not need to change the frame name and the publish_frequency.
 
 - build the packages with colcon (in your ros workspace root folder):
-  > ```colcon build --packages-select sic_mpu9250_ros``` or ```colcon build --packages-select sic_mpu9250_ros --symlink-install```
+  > ```colcon build --packages-select sic_mpu9250_ros --symlink-install``` or ```colcon build --packages-select sic_mpu9250_ros```
 
 - to vizualize in rviz, run:
   > ```ros2 launch sic_mpu9250_ros test_sic_mpu9250.launch.py``` in a terminal and ```rviz2``` in another terminal.
