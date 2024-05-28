@@ -1,9 +1,7 @@
 #ifndef SIC_ARDUINO_LIBSERIAL_COMM_HPP
 #define SIC_ARDUINO_LIBSERIAL_COMM_HPP
 
-// #include <cstring>
 #include <sstream>
-// #include <cstdlib>
 #include <libserial/SerialPort.h>
 #include <iostream>
 
@@ -60,7 +58,7 @@ public:
 
 
   void getRPY(float &roll, float &pitch, float &yaw){
-    get("rpy");
+    get("/rpy");
 
     roll = val[0];
     pitch = val[1];
@@ -74,7 +72,7 @@ public:
 
 
   void getQuat(float &qw, float &qx, float &qy, float &qz){
-    get("quat");
+    get("/quat");
 
     qw = val[0];
     qx = val[1];
@@ -89,7 +87,7 @@ public:
 
 
   void getRPYrate(float &roll_rate, float &pitch_rate, float &yaw_rate){
-    get("gyro-cal");
+    get("/gyro-cal");
 
     roll_rate = val[0];
     pitch_rate = val[1];
@@ -102,7 +100,7 @@ public:
   }
 
   void getAcc(float &ax, float &ay, float &az){
-    get("acc-cal");
+    get("/acc-cal");
 
     ax = val[0];
     ay = val[1];
@@ -115,7 +113,7 @@ public:
   }
 
   void getRPYvariance(float &r, float &p, float &y){
-    get("rpy-var");
+    get("/rpy-var");
 
     r = val[0];
     p = val[1];
@@ -128,7 +126,7 @@ public:
   }
 
   void getRPYrateVariance(float &r, float &p, float &y){
-    get("gyro-var");
+    get("/gyro-var");
 
     r = val[0];
     p = val[1];
@@ -141,7 +139,7 @@ public:
   }
 
   void getAccVariance(float &ax, float &ay, float &az){
-    get("acc-var");
+    get("/acc-var");
 
     ax = val[0];
     ay = val[1];
@@ -154,7 +152,7 @@ public:
   }
 
   void getGain(float &gain){
-    get("gain");
+    get("/gain");
 
     gain = val[0];
 
