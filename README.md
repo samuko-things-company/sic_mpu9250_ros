@@ -51,6 +51,7 @@
   ```
 
 - to vizualize in rviz (i.e quick test to see the IMU working), run:
+  > *don't forget to source your `ros workspace`*
   ```shell
   ros2 launch sic_mpu9250_ros test_sic_mpu9250.launch.py
   ``` 
@@ -64,6 +65,7 @@
   > Ensure the name of the imu link frame in your URDF FILE is the same as that of the `frame_id` in the `sic_mpu9250_start_params.yaml`
   
   First launch or run your robot's package file, then run:
+  > *don't forget to source your `ros workspace`*
   ```shell
   ros2 launch sic_mpu9250_ros start_sic_mpu9250.launch.py
   ```
