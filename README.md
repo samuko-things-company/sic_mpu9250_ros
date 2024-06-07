@@ -61,7 +61,7 @@
   ```
   > Add TF and move the IMU about to see the transform from the imu frame to the map frame for test.
 
-- to use in your project (e.g with a URDF file). **check out my sample robot also - (`smc_diff_bot`)[https://github.com/samuko-things-company/smc_diff_bot/tree/humble]** to see how to add IMU to your URDF file. 
+- to use in your project (e.g with a URDF file). **check out my sample robot also - [`smc_diff_bot`](https://github.com/samuko-things-company/smc_diff_bot/tree/humble)** to see how to add IMU to your URDF file. 
   > Ensure the name of the imu link frame in your URDF FILE is the same as that of the `frame_id` in the `sic_mpu9250_start_params.yaml`
   
   First launch or run your robot's package file, then run:
