@@ -58,7 +58,7 @@ public:
       sic_mpu9250.getRPYvariance(data_x, data_y, data_z);
       messageImu.orientation_covariance = { data_x, 0.0, 0.0, 0.0, data_y, 0.0, 0.0, 0.0, data_z };
 
-      sic_mpu9250.getRPYrateVariance(data_x, data_y, data_z);
+      sic_mpu9250.getGyroVariance(data_x, data_y, data_z);
       messageImu.angular_velocity_covariance = { data_x, 0.0, 0.0, 0.0, data_y, 0.0, 0.0, 0.0, data_z };
 
       sic_mpu9250.getAccVariance(data_x, data_y, data_z);
@@ -94,7 +94,7 @@ private:
     messageImu.orientation.y = data_y;
     messageImu.orientation.z = data_z;
 
-    sic_mpu9250.getRPYrate(data_x, data_y, data_z);
+    sic_mpu9250.getGyro(data_x, data_y, data_z);
     messageImu.angular_velocity.x = data_x;
     messageImu.angular_velocity.y = data_y;
     messageImu.angular_velocity.z = data_z;

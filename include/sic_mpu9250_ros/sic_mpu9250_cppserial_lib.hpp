@@ -86,12 +86,12 @@ public:
   }
 
 
-  void getRPYrate(float &roll_rate, float &pitch_rate, float &yaw_rate){
+  void getGyro(float &gx, float &gy, float &gz){
     get("/gyro-cal");
 
-    roll_rate = val[0];
-    pitch_rate = val[1];
-    yaw_rate = val[2];
+    gx = val[0];
+    gy = val[1];
+    gz = val[2];
 
     val[0] = 0.0;
     val[1] = 0.0;
@@ -125,12 +125,12 @@ public:
     val[3] = 0.0;
   }
 
-  void getRPYrateVariance(float &r, float &p, float &y){
+  void getGyroVariance(float &gx, float &gy, float &gz){
     get("/gyro-var");
 
-    r = val[0];
-    p = val[1];
-    y = val[2];
+    gx = val[0];
+    gy = val[1];
+    gz = val[2];
 
     val[0] = 0.0;
     val[1] = 0.0;
